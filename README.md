@@ -138,6 +138,9 @@ npm run dev
 
 Abre em `http://localhost:3000`.
 
+Publicado em **https://paint-000000.github.io/Pauta-mercado/** a cada push na
+`main`, via GitHub Pages.
+
 ```bash
 npm run build   # build de produção
 npx tsc --noEmit  # checagem de tipos
