@@ -1,0 +1,196 @@
+/* ============================================================
+   JORNAL FINANCEIRO — DESIGN TOKENS
+
+   Identidade em uma frase: papel de jornal + tinta oliva-preta +
+   a cor reservada para estado, nunca para seção.
+
+   A decisão que organiza tudo: existem DUAS camadas visuais e elas
+   nunca se confundem.
+
+     CAMADA JORNALÍSTICA  serifada, sobre papel, régua fina.
+                          É o que foi apurado.
+
+     CAMADA DE IA         sans/mono, fundo levemente tingido, régua
+                          à esquerda. É o que foi interpretado.
+
+   Essa separação é a identidade e também o cumprimento da promessa
+   de transparência: dá para saber, de relance e sem ler, o que é
+   dado e o que é leitura do dado.
+
+   Três níveis: primitivo → semântico → componente.
+   A UI nunca consome primitivo direto.
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* ---------- 1. PRIMITIVOS ---------- */
+
+  /* Papel. Off-white de jornal — viés levemente quente, mas longe do
+     creme: creme lê como convite de casamento, não como publicação
+     financeira. #FFF puro lê como aplicativo. */
+  --papel-000: #fdfcfa;
+  --papel-100: #f7f5f1;
+  --papel-200: #efece6;
+  --papel-300: #e4e0d8;
+
+  /* Tinta. Preto com viés oliva, não azul: azul-preto puxa para
+     "banco", e banco é justamente o que este produto não é. */
+  --tinta-900: #14140f;
+  --tinta-800: #24241d;
+  --tinta-700: #3a3a31;
+  --tinta-600: #55554a;
+  --tinta-500: #6e6e62;
+  --tinta-400: #8b8b7e;
+  --tinta-300: #b0ada2;
+
+  /* Régua. O divisor é o componente mais usado de um jornal. */
+  --regra-forte: #14140f;
+  --regra-media: #c9c5ba;
+  --regra-fina: #ded9cf;
+
+  /* Estado. Só isto carrega cor. Nenhuma seção tem cor própria. */
+  --alta-700: #0a5f47;
+  --alta-500: #0f7a5a;
+  --alta-100: #e4efe9;
+
+  --baixa-700: #8f2c22;
+  --baixa-500: #b03a2e;
+  --baixa-100: #f6e8e5;
+
+  --atencao-700: #85601a;
+  --atencao-500: #a67a1f;
+  --atencao-100: #f6efdf;
+
+  /* A camada de IA é ESCURA.
+     Antes era um cinza claro que apenas recuava. Inverter a superfície
+     faz três coisas de uma vez: moderniza, separa interpretação de
+     apuração de forma inequívoca, e dá ao produto um segundo registro
+     visual sem inventar uma segunda paleta. O jornalismo fica no
+     papel; a inteligência fica na tinta. */
+  --ia-fundo: #17211e;
+  --ia-fundo-2: #1f2b27;
+  --ia-fundo-3: #2a3833;
+  --ia-tinta: #eaefec; /* 13,9:1 sobre --ia-fundo */
+  --ia-tinta-2: #a9bab2; /*  6,6:1 — AA        */
+  --ia-regra: #35443e;
+  /* Único acento vivo do sistema. Só existe sobre a superfície
+     escura — no papel ele viraria decoração. */
+  --ia-acento: #5fd4a8; /*  9,4:1 sobre --ia-fundo */
+
+  /* ---------- Tipografia ---------- */
+
+  /* Newsreader para manchete: desenhada para notícia em tela, com
+     eixo óptico. Playfair e Fraunces são as escolhas óbvias e por
+     isso mesmo já viraram sotaque de site gerado.
+     IBM Plex Sans/Mono para interface e número: numeral tabular
+     excelente e temperatura técnica — o lado "tecnológica" do
+     briefing vem daqui, não de gradiente. */
+  --fonte-editorial: var(--font-newsreader), "Iowan Old Style",
+    "Palatino Linotype", Georgia, serif;
+  --fonte-ui: var(--font-plex-sans), -apple-system, "Segoe UI", system-ui,
+    sans-serif;
+  --fonte-num: var(--font-plex-mono), "Cascadia Mono", Consolas, monospace;
+
+  /* Escala editorial. Salto grande entre manchete e corpo — jornal
+     não tem meio-termo tímido. */
+  --t-2xs: 0.6875rem;
+  --t-xs: 0.75rem;
+  --t-sm: 0.8125rem;
+  --t-base: 0.9375rem;
+  --t-md: 1.0625rem;
+  --t-lg: 1.25rem;
+  --t-xl: 1.5rem;
+  --t-2xl: 1.9375rem;
+  --t-3xl: 2.5rem;
+  --t-4xl: 3.25rem;
+  --t-5xl: clamp(2.75rem, 5vw, 4.5rem);
+
+  /* Espaçamento — base 4px */
+  --e-1: 0.25rem;
+  --e-2: 0.5rem;
+  --e-3: 0.75rem;
+  --e-4: 1rem;
+  --e-5: 1.25rem;
+  --e-6: 1.5rem;
+  --e-8: 2rem;
+  --e-10: 2.5rem;
+  --e-12: 3rem;
+  --e-16: 4rem;
+  --e-20: 5rem;
+
+  /* Grade. 12 colunas, medida de leitura curta como coluna de jornal. */
+  --largura-max: 1440px;
+  --largura-texto: 62ch;
+  --margem: clamp(1rem, 4vw, 3rem);
+  --calha: clamp(1rem, 2vw, 2rem);
+
+  /* Raio e elevação separam CONTEÚDO de FERRAMENTA.
+     Matéria, manchete e tabela seguem em canto reto e régua fina —
+     é o registro da publicação. Já radar, simulador e controles são
+     produto: ganham raio e superfície elevada. A distinção não é
+     estética, é semântica: o leitor sabe onde ele lê e onde ele age. */
+  --raio-0: 0px;
+  --raio-1: 3px;
+  --raio-2: 8px;
+  --raio-3: 14px;
+  --raio-pill: 999px;
+
+  --sombra-1: 0 1px 2px rgb(20 20 15 / 0.04), 0 2px 6px rgb(20 20 15 / 0.04);
+  --sombra-2: 0 2px 4px rgb(20 20 15 / 0.05), 0 10px 28px rgb(20 20 15 / 0.07);
+  --sombra-3: 0 18px 48px rgb(20 20 15 / 0.14);
+  --sombra-escura: 0 12px 40px rgb(23 33 30 / 0.28);
+
+  /* Camadas */
+  --z-base: 0;
+  --z-sticky: 100;
+  --z-nav: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+
+  /* Motion — discreto. Nada acima de 240ms; nada com bounce. */
+  --dur-1: 120ms;
+  --dur-2: 180ms;
+  --dur-3: 240ms;
+  --ease: cubic-bezier(0.2, 0, 0.15, 1);
+  --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---------- 2. SEMÂNTICOS ---------- */
+
+  --c-fundo: var(--papel-000);
+  --c-fundo-2: var(--papel-100);
+  --c-fundo-3: var(--papel-200);
+
+  /* Contrastes medidos, não estimados. Ver /sistema. */
+  --c-texto: var(--tinta-900); /* 16,9:1 */
+  --c-texto-2: var(--tinta-700); /*  9,4:1 */
+  --c-texto-3: var(--tinta-500); /*  4,9:1 — AA */
+  --c-texto-inv: var(--papel-000);
+
+  --c-regra: var(--regra-fina);
+  --c-regra-media: var(--regra-media);
+  --c-regra-forte: var(--regra-forte);
+
+  --c-alta: var(--alta-500);
+  --c-baixa: var(--baixa-500);
+  --c-atencao: var(--atencao-500);
+  --c-neutro: var(--tinta-500);
+
+  --c-foco: var(--alta-700);
+
+  /* ---------- 3. DE COMPONENTE ---------- */
+
+  --masthead-h: 68px;
+  --nav-h: 44px;
+  --ticker-h: 40px;
+  --nav-mobile-h: 58px;
+
+  --kicker-tracking: 0.1em;
+  --rotulo-tracking: 0.06em;
+
+  --anel-foco: 2px solid var(--c-foco);
+  --anel-offset: 2px;
+
+  --regra-secao: 1px solid var(--c-regra);
+  --regra-destaque: 3px solid var(--c-regra-forte);
+}
