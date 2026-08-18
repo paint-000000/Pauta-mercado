@@ -39,6 +39,25 @@ export type Fatia = {
   porque: string;
 };
 
+/**
+ * Resumo agregado da distribuição.
+ *
+ * Existe porque a soma das fatias não é óbvia: alguém que vê "25% em
+ * ações" não conclui sozinho quanto do total continua acessível em um
+ * dia. São três perguntas práticas respondidas com aritmética simples,
+ * sem projeção de retorno — projetar rendimento seria prometer
+ * resultado, que é o que o produto não faz.
+ */
+export type Resumo = {
+  /** % com resgate em até dois dias úteis. */
+  liquidoRapido: number;
+  /** % que acompanha a inflação por construção. */
+  protegidoInflacao: number;
+  /** % em renda variável. */
+  emRendaVariavel: number;
+  riscoPonderado: "baixo" | "medio" | "alto";
+};
+
 export type Resultado = {
   total: number;
   fatias: Fatia[];
@@ -47,17 +66,38 @@ export type Resultado = {
   regra: string;
   /** O que faria esta leitura deixar de valer. */
   invalidaria: string;
+  /** Anos, para ordenar oportunidades por aderência ao horizonte. */
+  horizonteAnos: number;
+  resumo: Resumo;
 };
 
+/**
+ * `horizonteNatural` é o prazo próprio da classe, não o do usuário.
+ *
+ * A reserva é o dinheiro que pode ser preciso a qualquer momento —
+ * ordenar os títulos dela pelo horizonte de 10 anos da carteira
+ * colocava o vencimento mais longo em primeiro, que é o oposto do que
+ * serve. Quando é `undefined`, vale o horizonte do usuário.
+ */
 export const CLASSES: Record<
   ClasseSim,
-  { nome: string; cor: string; risco: string; liquidez: string; ticker?: string }
+  {
+    nome: string;
+    cor: string;
+    risco: string;
+    liquidez: string;
+    ticker?: string;
+    horizonteNatural?: number;
+  }
 > = {
   reserva: {
     nome: "Reserva com liquidez diária",
     cor: "var(--tinta-600)",
     risco: "Baixo",
     liquidez: "Alta",
+    // Dinheiro de emergência é sempre de curtíssimo prazo, mesmo numa
+    // carteira de dez anos.
+    horizonteNatural: 1,
   },
   "tesouro-ipca": {
     nome: "Título atrelado à inflação",
@@ -159,6 +199,37 @@ function faixaDe(prazo: Prazo): Faixa {
   return "longo";
 }
 
+/** Ponto médio de cada faixa, em anos. Usado para ordenar títulos. */
+const ANOS: Record<Prazo, number> = { ate1: 1, "1a3": 2, "3a5": 4, mais5: 10 };
+
+/** Características de cada classe, para o resumo agregado. */
+const PERFIL: Record<
+  ClasseSim,
+  { liquidoRapido: boolean; indexadoInflacao: boolean; variavel: boolean; risco: number }
+> = {
+  reserva: { liquidoRapido: true, indexadoInflacao: false, variavel: false, risco: 1 },
+  "tesouro-ipca": { liquidoRapido: true, indexadoInflacao: true, variavel: false, risco: 1 },
+  "etf-brasil": { liquidoRapido: true, indexadoInflacao: false, variavel: true, risco: 2 },
+  "etf-exterior": { liquidoRapido: true, indexadoInflacao: false, variavel: true, risco: 2 },
+  fii: { liquidoRapido: false, indexadoInflacao: false, variavel: true, risco: 2 },
+  acoes: { liquidoRapido: true, indexadoInflacao: false, variavel: true, risco: 3 },
+};
+
+function resumir(fatias: Fatia[]): Resumo {
+  const soma = (f: (p: (typeof PERFIL)[ClasseSim]) => boolean) =>
+    fatias.reduce((s, x) => (f(PERFIL[x.classe]) ? s + x.percentual : s), 0);
+
+  const risco =
+    fatias.reduce((s, x) => s + PERFIL[x.classe].risco * x.percentual, 0) / 100;
+
+  return {
+    liquidoRapido: soma((p) => p.liquidoRapido),
+    protegidoInflacao: soma((p) => p.indexadoInflacao),
+    emRendaVariavel: soma((p) => p.variavel),
+    riscoPonderado: risco <= 1.35 ? "baixo" : risco <= 2.2 ? "medio" : "alto",
+  };
+}
+
 const ROTULO_PRAZO: Record<Prazo, string> = {
   ate1: "em até 1 ano",
   "1a3": "entre 1 e 3 anos",
@@ -185,16 +256,19 @@ export function simular(r: Respostas): Resultado {
   // colchão e investe em renda variável costuma ser forçado a vender
   // no pior momento — é justamente o que o produto existe para evitar.
   if (r.reserva === "nao") {
+    const fatias: Fatia[] = [
+      { classe: "reserva", percentual: 100, valor: total, porque: PORQUE.reserva },
+    ];
     return {
       total,
-      fatias: [
-        { classe: "reserva", percentual: 100, valor: total, porque: PORQUE.reserva },
-      ],
+      fatias,
       justificativa:
         "Você indicou que ainda não tem uma reserva para emergências. Por isso a simulação coloca tudo em liquidez diária primeiro — independentemente do resto das respostas.",
       regra: "R1 · sem reserva de emergência",
       invalidaria:
         "Assim que a reserva estiver formada, refaça a simulação: o resultado muda por completo.",
+      horizonteAnos: ANOS[r.prazo],
+      resumo: resumir(fatias),
     };
   }
 
@@ -242,5 +316,7 @@ export function simular(r: Respostas): Resultado {
       faixa === "longo"
         ? "Se o prazo encurtar — uma meta que antecipa, uma despesa que aparece — a fatia de renda variável deixa de fazer sentido antes de qualquer mudança no mercado."
         : "Se o prazo se alongar, vale refazer: horizonte maior muda o que é adequado mais do que qualquer notícia do dia.",
+    horizonteAnos: ANOS[r.prazo],
+    resumo: resumir(fatias),
   };
 }

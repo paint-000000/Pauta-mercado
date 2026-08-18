@@ -1050,13 +1050,22 @@ a.cartao:hover {
   gap: var(--e-3);
   height: 100%;
 }
-.dica-n {
+/* Selo de dica essencial. Substituiu o ordinal 01/02/03: as dicas são
+   um conjunto, não uma sequência, e o número reiniciava a cada
+   categoria sugerindo uma ordem inexistente. Este selo, ao contrário,
+   codifica algo verdadeiro sobre o conteúdo. */
+.dica-selo {
+  align-self: flex-start;
   font-family: var(--fonte-num);
-  font-size: var(--t-2xl);
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  color: var(--c-regra-media);
-  line-height: 1;
+  font-size: var(--t-2xs);
+  font-weight: 600;
+  letter-spacing: var(--kicker-tracking);
+  text-transform: uppercase;
+  color: var(--alta-700);
+  border: 1px solid var(--alta-500);
+  background: var(--alta-100);
+  border-radius: var(--raio-1);
+  padding: 3px var(--e-2);
 }
 .dica-porque {
   border-top: 1px solid var(--c-regra);
@@ -1148,7 +1157,8 @@ a.cartao:hover {
   flex-direction: column;
   gap: var(--e-2);
 }
-.sim-perg > span {
+.sim-perg > span,
+.sim-perg > label {
   font-family: var(--fonte-num);
   font-size: var(--t-2xs);
   font-weight: 600;
@@ -1160,6 +1170,238 @@ a.cartao:hover {
   display: flex;
   flex-wrap: wrap;
   gap: var(--e-2);
+}
+
+/* Tira de resumo: três números que a soma das fatias não entrega. */
+.resumo-tira {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  border: 1px solid var(--c-regra);
+  border-radius: var(--raio-2);
+  overflow: hidden;
+  background: var(--c-fundo);
+}
+.resumo-cel {
+  padding: var(--e-4);
+  border-right: 1px solid var(--c-regra);
+}
+.resumo-cel:last-child {
+  border-right: 0;
+}
+.resumo-cel dt {
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--c-texto-3);
+}
+.resumo-cel dd {
+  margin: var(--e-1) 0 0;
+  font-family: var(--fonte-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-xl);
+  letter-spacing: -0.03em;
+}
+
+/* ============================================================
+   OPORTUNIDADES DENTRO DE UMA FATIA
+   ============================================================ */
+
+.op-bloco {
+  margin-top: var(--e-4);
+  border: 1px solid var(--c-regra);
+  border-radius: var(--raio-2);
+  overflow: hidden;
+  background: var(--c-fundo-2);
+}
+
+.op-cabeca {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  width: 100%;
+  /* É o gatilho que abre a lista de instrumentos — precisa do alvo
+     cheio, não da altura que o padding der por acaso. */
+  min-height: 44px;
+  padding: var(--e-3) var(--e-4);
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  font-weight: 600;
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--c-texto-2);
+  background: none;
+  text-align: left;
+  transition: background var(--dur-1) var(--ease);
+}
+.op-cabeca:hover {
+  background: var(--c-fundo-3);
+}
+.op-cabeca svg {
+  transition: transform var(--dur-2) var(--ease);
+  flex-shrink: 0;
+}
+.op-cabeca[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.op-lista {
+  border-top: 1px solid var(--c-regra);
+  background: var(--c-fundo);
+}
+
+.op-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--e-2) var(--e-4);
+  padding: var(--e-4);
+  border-bottom: 1px solid var(--c-regra);
+}
+.op-item:last-child {
+  border-bottom: 0;
+}
+/* Quem não cabe na fatia continua visível, mas recuado: saber que
+   existe e ainda não dá é informação; sumir com o item não é. */
+.op-item[data-cabe="nao"] {
+  opacity: 0.55;
+}
+
+.op-nome {
+  font-weight: 600;
+  font-size: var(--t-base);
+}
+.op-emissor {
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--c-texto-3);
+  display: block;
+  margin-top: 2px;
+}
+.op-num {
+  text-align: right;
+  white-space: nowrap;
+}
+.op-num strong {
+  display: block;
+  font-family: var(--fonte-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-md);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.op-num span {
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--c-texto-3);
+}
+.op-corpo {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+.op-destaque {
+  font-size: var(--t-sm);
+  color: var(--c-texto-2);
+  max-width: 60ch;
+}
+.op-obs {
+  font-size: var(--t-sm);
+  color: var(--atencao-700);
+  display: flex;
+  gap: var(--e-2);
+  max-width: 60ch;
+}
+.op-obs::before {
+  content: "!";
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border: 1px solid currentColor;
+  border-radius: var(--raio-pill);
+  font-family: var(--fonte-num);
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+.op-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-1) var(--e-3);
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--c-texto-3);
+}
+
+@media (max-width: 560px) {
+  .op-item {
+    grid-template-columns: 1fr;
+  }
+  .op-num {
+    text-align: left;
+  }
+}
+
+/* Interação por toque: os chips são o controle principal do
+   simulador, e 40px fica apertado no polegar. */
+@media (max-width: 899px) {
+  .chip {
+    min-height: 44px;
+  }
+  .botao-icone {
+    width: 44px;
+    height: 44px;
+  }
+  /* Sticky no mobile prenderia o painel de entrada no topo enquanto a
+     pessoa rola os resultados — ele empilha acima deles aqui. */
+  .painel {
+    position: static !important;
+  }
+}
+
+/* ============================================================
+   FILTRO DE DICAS
+   ============================================================ */
+
+.filtro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  padding-bottom: var(--e-5);
+  border-bottom: 1px solid var(--c-regra);
+  margin-bottom: var(--e-6);
+}
+
+.dica-aplica {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--c-texto-3);
+  margin-top: var(--e-2);
+}
+.dica-exemplo {
+  background: var(--c-fundo-2);
+  border-radius: var(--raio-2);
+  padding: var(--e-3) var(--e-4);
+  font-family: var(--fonte-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-sm);
+  color: var(--c-texto-2);
+  line-height: 1.5;
 }
 
 /* ============================================================
