@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Busca from "./Busca";
 
 /**
@@ -46,6 +46,10 @@ function ehAtiva(pathname: string, href: string): boolean {
 export default function Cabecalho() {
   const pathname = usePathname();
   const [buscaAberta, setBuscaAberta] = useState(false);
+
+  // Identidade estável: `Busca` usa esta função como dependência do
+  // efeito que instala a armadilha de foco.
+  const fecharBusca = useCallback(() => setBuscaAberta(false), []);
 
   const data = new Date("2026-08-18T12:00:00-03:00").toLocaleDateString(
     "pt-BR",
@@ -112,16 +116,21 @@ export default function Cabecalho() {
         </div>
       </header>
 
-      {buscaAberta && <Busca aoFechar={() => setBuscaAberta(false)} />}
+      {buscaAberta && <Busca aoFechar={fecharBusca} />}
     </>
   );
 }
 
-/** Navegação inferior do mobile. Cinco destinos, como pede o item 17. */
-export function NavMobile() {
-  const pathname = usePathname();
-
-  const I = ({ d }: { d: string }) => (
+/**
+ * Ícone da navegação inferior.
+ *
+ * Fica fora do componente de propósito: declarado dentro do render,
+ * o React o trata como um tipo novo a cada render e remonta a árvore
+ * inteira — o ESLint do Next (`react-hooks/static-components`) marca
+ * exatamente isso.
+ */
+function Icone({ d }: { d: string }) {
+  return (
     <svg
       width="19"
       height="19"
@@ -136,24 +145,29 @@ export function NavMobile() {
       <path d={d} />
     </svg>
   );
+}
 
-  const itens = [
-    { href: "/", rotulo: "Hoje", icone: <I d="M4 5h16M4 10h10M4 15h16M4 20h7" /> },
-    { href: "/radar", rotulo: "Radar", icone: <I d="M12 21a9 9 0 1 0-9-9M12 12l6-4" /> },
-    { href: "/simulador", rotulo: "Simular", icone: <I d="M6 4h12v16H6zM9 8h6M9 12h2M13 12h2M9 16h2M13 16h2" /> },
-    { href: "/dicas", rotulo: "Dicas", icone: <I d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z" /> },
-    { href: "/noticias", rotulo: "Notícias", icone: <I d="M4 4h13v16H4zM17 9h3v9a2 2 0 0 1-2 2h-1zM7 8h7M7 12h7M7 16h4" /> },
-  ];
+const MOBILE = [
+  { href: "/", rotulo: "Hoje", d: "M4 5h16M4 10h10M4 15h16M4 20h7" },
+  { href: "/radar", rotulo: "Radar", d: "M12 21a9 9 0 1 0-9-9M12 12l6-4" },
+  { href: "/simulador", rotulo: "Simular", d: "M6 4h12v16H6zM9 8h6M9 12h2M13 12h2M9 16h2M13 16h2" },
+  { href: "/dicas", rotulo: "Dicas", d: "M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z" },
+  { href: "/noticias", rotulo: "Notícias", d: "M4 4h13v16H4zM17 9h3v9a2 2 0 0 1-2 2h-1zM7 8h7M7 12h7M7 16h4" },
+];
+
+/** Navegação inferior do mobile. Cinco destinos, como pede o item 17. */
+export function NavMobile() {
+  const pathname = usePathname();
 
   return (
     <nav className="nav-mobile so-mobile" aria-label="Navegação">
-      {itens.map((i) => (
+      {MOBILE.map((i) => (
         <Link
           key={i.href}
           href={i.href}
           aria-current={ehAtiva(pathname, i.href) ? "page" : undefined}
         >
-          {i.icone}
+          <Icone d={i.d} />
           {i.rotulo}
         </Link>
       ))}

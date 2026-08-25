@@ -5,6 +5,7 @@ import "./globals.css";
 import GlossarioProvider from "@/components/glossario/GlossarioProvider";
 import Cabecalho, { NavMobile } from "@/components/chrome/Cabecalho";
 import Faixa, { Rodape } from "@/components/chrome/Faixa";
+import { Tarja } from "@/components/chrome/Tarja";
 
 /**
  * next/font baixa e serve as fontes do próprio domínio no build — é
@@ -75,9 +76,7 @@ export default function RootLayout({
         </a>
 
         <GlossarioProvider>
-          <p className="tarja" role="status">
-            Protótipo · cotações e análises são fictícias
-          </p>
+          <Tarja />
 
           <Cabecalho />
           <Faixa />

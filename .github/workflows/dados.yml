@@ -1,0 +1,82 @@
+# ============================================================
+# ATUALIZAÇÃO DIÁRIA DOS DADOS
+#
+# O site continua sendo export estático: nenhum leitor faz chamada
+# de rede. Quem fala com a internet é este workflow, uma vez por dia,
+# e o que ele produz é um commit em `src/data/gerado/mercado.ts`.
+#
+# Esse commit dispara o workflow de deploy que já existia. A cadeia
+# inteira é: cron → busca → commit → build → Pages.
+#
+# Versionar o dado é decisão, não efeito colateral: o histórico do
+# git vira o histórico do que o site mostrou, e dá para responder "o
+# que estava na tela no dia X" sem manter banco nenhum.
+# ============================================================
+
+name: Atualizar dados de mercado
+
+on:
+  schedule:
+    # 21:30 UTC = 18:30 em Brasília, depois do fechamento da B3 (18h)
+    # e depois da publicação das séries do Banco Central. De segunda a
+    # sexta: fim de semana não tem pregão nem divulgação, e rodar
+    # sábado só produziria um commit sem nenhuma mudança.
+    - cron: "30 21 * * 1-5"
+
+  # Permite rodar à mão pela aba Actions, para testar sem esperar.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Duas rodadas ao mesmo tempo escreveriam o mesmo arquivo e uma
+# perderia. Fila, sem cancelar: cada rodada é um retrato de um
+# momento e descartar uma cria buraco no histórico.
+concurrency:
+  group: "dados"
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # 22.6+ executa TypeScript direto, que é o que permite rodar
+          # o script de ingestão sem passo de build.
+          node-version: "24"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Buscar dados das fontes
+        env:
+          # Sem o token, o passo NÃO falha: o Banco Central atualiza
+          # normalmente e as cotações de ações ficam com o último
+          # valor bom, marcadas como velhas na tela. Meio site
+          # atualizado é melhor que build vermelho.
+          BRAPI_TOKEN: ${{ secrets.BRAPI_TOKEN }}
+        run: npm run atualizar
+
+      - name: Verificar antes de publicar
+        # Dado novo passa pelas mesmas regras que conteúdo escrito à
+        # mão. É aqui que a regra "empresa real não carrega tese"
+        # protege de verdade: se uma cotação real entrar num ativo
+        # que tem tese de protótipo, o commit não acontece.
+        run: npm run verificar
+
+      - name: Commitar se algo mudou
+        run: |
+          if git diff --quiet -- src/data/gerado; then
+            echo "Nenhuma mudança nos dados. Nada a commitar."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/gerado
+          git commit -m "dados: atualização automática de $(date -u +%Y-%m-%d)"
+          git push

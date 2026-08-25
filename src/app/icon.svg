@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pauta Mercado">
+  <!--
+    FAVICON — as duas camadas do produto em 16 pixels.
+
+    Tinta de jornal como chão, o "P" da marca em papel, e o ponto
+    verde-água que marca a camada de IA em toda a interface.
+
+    Três decisões que o tamanho impõe:
+
+    1. O "P" é PATH, não <text>. Favicon não carrega webfont: a
+       Newsreader não existe nesse contexto, e cair na serifa do
+       sistema faria o ícone mudar de forma entre máquinas.
+
+    2. O chão é escuro, não papel. Papel off-white sobre a aba clara
+       do navegador desapareceria — o mesmo erro de contraste que os
+       links do menu tinham.
+
+    3. O ponto é grande para o que é. A 16px um raio "proporcional"
+       vira meio pixel cinza; ele precisa de massa para continuar
+       sendo um ponto.
+  -->
+  <rect width="64" height="64" rx="13" fill="#14140f"/>
+
+  <!-- P de haste larga, sem serifa no pé.
+
+       A primeira versão tinha serifas e traço fino, fiel à Newsreader
+       do masthead. Medido a 16px, o "P" ocupava 5% dos pixels e o
+       olho da letra desaparecia: fidelidade tipográfica que só existe
+       a 64px não é fidelidade, é ruído. A haste engrossou, as
+       serifas saíram e o olho ganhou altura para sobreviver a um
+       pixel e meio.
+
+       fill-rule evenodd abre o olho. -->
+  <path fill="#fdfcfa" fill-rule="evenodd" d="
+    M15 11 H37 C44 11 48.5 16 48.5 24 C48.5 32 44 37 37 37 H27 V53 H15 Z
+    M27 19 H36 C39.5 19 41 21 41 24 C41 27 39.5 29 36 29 H27 Z
+  "/>
+
+  <!-- O acento da camada de IA. Único ponto de cor do sistema. -->
+  <circle cx="49" cy="47" r="9" fill="#5fd4a8"/>
+</svg>

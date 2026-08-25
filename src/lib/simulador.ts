@@ -44,9 +44,13 @@ export type Fatia = {
  *
  * Existe porque a soma das fatias não é óbvia: alguém que vê "25% em
  * ações" não conclui sozinho quanto do total continua acessível em um
- * dia. São três perguntas práticas respondidas com aritmética simples,
- * sem projeção de retorno — projetar rendimento seria prometer
- * resultado, que é o que o produto não faz.
+ * dia. São três perguntas práticas respondidas com aritmética simples.
+ *
+ * Aqui não entra retorno, e a divisão é de propósito: este arquivo
+ * responde "como fica a carteira", que é aritmética da alocação. O
+ * "quanto isso devolve" mora em `lib/projecao.ts`, porque depende de
+ * premissas de mercado que a alocação não usa — e misturar as duas
+ * faria a matriz de percentuais parecer que prevê retorno.
  */
 export type Resumo = {
   /** % com resgate em até dois dias úteis. */

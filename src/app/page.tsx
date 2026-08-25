@@ -11,6 +11,7 @@ import {
 import { indicadores, NO_HERO } from "@/data/indicadores";
 import { manchete, ROTULO_CATEGORIA, secundarias } from "@/data/noticias";
 import { edicao, radar, ROTULO_HORIZONTE, ROTULO_RISCO } from "@/data/radar";
+import { IdadeDaEdicao } from "@/components/ui/IdadeDaEdicao";
 import { ipos, separarIpos } from "@/data/ipos";
 import { getAtivo } from "@/data/ativos";
 import { dicasDestaque } from "@/data/dicas";
@@ -81,6 +82,7 @@ export default function Hoje() {
                   day: "2-digit",
                   month: "long",
                 })}
+                <IdadeDaEdicao data={edicao.data} />
               </p>
               <h2 className="manchete manchete-md">{edicao.saudacao}</h2>
               <p

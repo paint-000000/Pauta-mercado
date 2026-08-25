@@ -4,9 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run validar",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import ./scripts/alias.mjs --test \"src/**/*.test.ts\"",
+    "atualizar": "node --env-file-if-exists=.env.local --import ./scripts/alias.mjs scripts/atualizar.ts",
+    "tokens": "node --import ./scripts/alias.mjs scripts/tokens.ts",
+    "validar": "node --import ./scripts/alias.mjs scripts/validar.ts",
+    "verificar": "npm run typecheck && npm run lint && npm run test && npm run validar && npm run tokens"
   },
   "dependencies": {
     "next": "16.3.0",
@@ -20,5 +27,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "typescript": "^5"
-  }
+  },
+  "type": "module"
 }

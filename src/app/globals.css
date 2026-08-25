@@ -318,8 +318,19 @@ img {
 }
 /* A aba da IA é a única com marca própria — porque a camada de IA
    é a única coisa aqui que não é jornalismo. */
+/* Simulador e Radar são as páginas da camada de IA, e o menu marca
+   isso — mas marca por FORMA, com o ponto, não por cor.
+
+   Estavam em `--ia-tinta`, que é o branco da superfície escura
+   (13,9:1 sobre --ia-fundo). Sobre papel isso deu 1,13:1 — branco no
+   branco, contra 11,2:1 dos vizinhos. O token não estava errado; o
+   lugar dele é que era.
+
+   Os tokens `--ia-*` de tinta e acento existem sobre a superfície
+   escura e só lá. É a mesma regra que `tokens.css` já declara para
+   o acento, e que valia para a tinta sem ninguém ter escrito. */
 .nav-link[data-ia="1"] {
-  color: var(--ia-tinta);
+  color: var(--c-texto-2);
 }
 .nav-link[data-ia="1"]::before {
   content: "";
@@ -328,6 +339,9 @@ img {
   background: var(--ia-regra);
   border-radius: var(--raio-pill);
   margin-right: 6px;
+  /* O ponto é o único sinal agora, então ele não pode sumir quando o
+     link é o ativo nem no hover. */
+  flex-shrink: 0;
 }
 
 /* Faixa de seções — a linha secundária, estilo caderno */
@@ -1122,6 +1136,33 @@ a.cartao:hover {
   appearance: textfield;
 }
 
+/* O aporte é a segunda entrada, não a primeira: número menor, régua
+   mais fina. Dar a ele o mesmo peso do valor inicial sugeriria que as
+   duas respostas pesam igual, e no gráfico o aporte costuma pesar
+   mais — mas quem chega na tela ainda pensa no valor que tem hoje. */
+.sim-valor-2 {
+  border-bottom-width: 1px;
+  border-bottom-color: var(--c-regra-media);
+}
+.sim-valor-2 input {
+  font-size: var(--t-xl);
+}
+.sim-sufixo {
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--c-texto-3);
+  white-space: nowrap;
+}
+
+.sim-nota {
+  font-size: var(--t-2xs);
+  color: var(--c-texto-3);
+  line-height: 1.45;
+  margin-top: var(--e-2);
+}
+
 .sim-barra {
   display: flex;
   height: 10px;
@@ -1563,4 +1604,443 @@ a.cartao:hover {
   width: 8px;
   height: 1px;
   background: var(--c-texto-3);
+}
+
+/* ============================================================
+   PROJEÇÃO — vive na camada escura
+
+   Projetar patrimônio é interpretação, não apuração: nenhum destes
+   números foi observado, todos foram calculados a partir de uma
+   premissa declarada. Por isso o bloco inteiro fica sobre a
+   superfície de IA, com a mesma régua e o mesmo acento — o leitor
+   reconhece o registro antes de ler a primeira palavra.
+   ============================================================ */
+
+.proj {
+  margin-top: var(--e-6);
+}
+
+.proj-leitura {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--e-4);
+  padding-bottom: var(--e-5);
+}
+
+.proj-leitura-rotulo {
+  display: block;
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  font-weight: 600;
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--ia-tinta-2);
+}
+
+.proj-leitura-valor {
+  display: block;
+  font-family: var(--fonte-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-3xl);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-top: var(--e-2);
+  /* O número mais importante da tela muda a cada movimento do dedo.
+     Sem transição ele pisca; com transição longa ele arrasta. */
+  transition: color var(--dur-1) var(--ease);
+}
+
+/* A quebra entre depósito e rendimento é a linha que impede que
+   "R$ 180 mil" seja lido como ganho. Ela nunca é rodapé. */
+.proj-leitura-quebra {
+  display: block;
+  font-size: var(--t-sm);
+  color: var(--ia-tinta-2);
+  margin-top: var(--e-2);
+}
+.proj-leitura-quebra b {
+  color: var(--ia-acento);
+  font-weight: 500;
+}
+
+.proj-faixa-fim {
+  text-align: right;
+}
+.proj-faixa-fim .num {
+  display: block;
+  font-size: var(--t-sm);
+  color: var(--ia-tinta);
+  margin-top: var(--e-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.proj-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: pan-y;
+  cursor: crosshair;
+}
+
+.proj-grade {
+  stroke: var(--ia-regra);
+  stroke-width: 1;
+}
+.proj-eixo {
+  stroke: var(--ia-regra);
+  stroke-width: 1.5;
+}
+
+/* O tamanho vem do atributo `fontSize`, que acompanha o viewBox — em
+   tela estreita a caixa encolhe e o texto precisa crescer junto. */
+.proj-escala,
+.proj-tempo {
+  font-family: var(--fonte-num);
+  fill: var(--ia-tinta-2);
+  letter-spacing: 0.02em;
+}
+
+/* A faixa é UM objeto: a borda de cima e a de baixo têm exatamente o
+   mesmo traço. Engrossar a de cima seria fazer propaganda com CSS. */
+.proj-borda {
+  fill: none;
+  stroke: var(--ia-acento);
+  stroke-width: 1;
+  stroke-opacity: 0.55;
+}
+
+.proj-base {
+  fill: none;
+  stroke: var(--ia-acento);
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.proj-investido {
+  fill: none;
+  stroke: var(--ia-tinta-2);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  stroke-linecap: round;
+}
+
+.proj-guia line {
+  stroke: var(--ia-tinta);
+  stroke-width: 1;
+  stroke-opacity: 0.35;
+}
+.proj-guia circle {
+  fill: var(--ia-fundo);
+  stroke: var(--ia-acento);
+  stroke-width: 1.5;
+}
+.proj-guia .proj-guia-base {
+  fill: var(--ia-acento);
+  stroke: var(--ia-fundo);
+  stroke-width: 2;
+}
+/* Em repouso a guia marca o fim do horizonte, discreta. Sob o dedo
+   ela assume. */
+.proj-guia[data-ativo="nao"] line {
+  stroke-opacity: 0.18;
+}
+.proj-guia[data-ativo="nao"] circle:not(.proj-guia-base) {
+  opacity: 0;
+}
+
+.proj-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3) var(--e-5);
+  margin-top: var(--e-4);
+  font-size: var(--t-2xs);
+  color: var(--ia-tinta-2);
+}
+.proj-legenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+}
+.proj-legenda span::before {
+  content: "";
+  width: 14px;
+  height: 3px;
+  border-radius: var(--raio-pill);
+  flex-shrink: 0;
+}
+.proj-legenda [data-marca="faixa"]::before {
+  height: 10px;
+  background: rgb(95 212 168 / 0.28);
+  border: 1px solid rgb(95 212 168 / 0.55);
+}
+.proj-legenda [data-marca="base"]::before {
+  background: var(--ia-acento);
+}
+.proj-legenda [data-marca="investido"]::before {
+  height: 0;
+  border-top: 2px dashed var(--ia-tinta-2);
+}
+
+/* ---- Três cenários lado a lado ---- */
+
+.proj-cenarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: var(--e-6) 0 0;
+  background: var(--ia-regra);
+  border: 1px solid var(--ia-regra);
+  border-radius: var(--raio-2);
+  overflow: hidden;
+}
+.proj-cenario {
+  background: var(--ia-fundo-2);
+  padding: var(--e-4);
+}
+/* Só o central recebe o acento. Colorir o otimista de verde e o
+   pessimista de vermelho seria dizer ao leitor qual torcer. */
+.proj-cenario[data-c="base"] {
+  background: var(--ia-fundo-3);
+}
+.proj-cenario dt {
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  font-weight: 600;
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--ia-tinta-2);
+}
+.proj-cenario dd {
+  margin: 0;
+}
+.proj-cenario-valor {
+  font-family: var(--fonte-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-xl);
+  letter-spacing: -0.035em;
+  margin-top: var(--e-2) !important;
+}
+.proj-cenario[data-c="base"] .proj-cenario-valor {
+  color: var(--ia-acento);
+}
+.proj-cenario-taxa {
+  font-family: var(--fonte-num);
+  font-size: var(--t-sm);
+  color: var(--ia-tinta);
+  margin-top: var(--e-1) !important;
+}
+.proj-cenario-nota {
+  font-size: var(--t-2xs);
+  color: var(--ia-tinta-2);
+  margin-top: var(--e-2) !important;
+  line-height: 1.4;
+}
+
+/* ---- Tabela: a alternativa não visual ---- */
+
+.proj-tabela {
+  margin-top: var(--e-5);
+  border-top: 1px solid var(--ia-regra);
+  padding-top: var(--e-4);
+}
+.proj-tabela summary {
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--rotulo-tracking);
+  text-transform: uppercase;
+  color: var(--ia-acento);
+  cursor: pointer;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+.proj-tabela-rolo {
+  overflow-x: auto;
+  margin-top: var(--e-3);
+}
+.proj-tabela table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--fonte-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-xs);
+  white-space: nowrap;
+}
+.proj-tabela caption {
+  text-align: left;
+  font-size: var(--t-2xs);
+  color: var(--ia-tinta-2);
+  padding-bottom: var(--e-2);
+}
+.proj-tabela th,
+.proj-tabela td {
+  padding: var(--e-2) var(--e-3);
+  text-align: right;
+  border-bottom: 1px solid var(--ia-regra);
+}
+.proj-tabela thead th {
+  color: var(--ia-tinta-2);
+  font-weight: 600;
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--rotulo-tracking);
+}
+.proj-tabela tbody th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--ia-tinta);
+}
+
+.proj-premissas-macro,
+.proj-premissas-aviso {
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: var(--ia-tinta-2);
+  margin-top: var(--e-3);
+}
+.proj-premissas-macro strong {
+  color: var(--ia-tinta);
+  font-family: var(--fonte-num);
+  font-weight: 500;
+}
+.proj-premissas-aviso {
+  font-size: var(--t-2xs);
+  border-top: 1px solid var(--ia-regra);
+  padding-top: var(--e-3);
+}
+
+/* A coluna da conta é texto corrido dentro de uma tabela numérica:
+   ela é a única que não pode ficar em mono, alinhada à direita nem
+   com `nowrap`. */
+.proj-premissas .proj-col-base {
+  font-family: var(--fonte-ui);
+  text-align: left;
+  white-space: normal;
+  min-width: 22ch;
+  color: var(--ia-tinta-2);
+}
+.proj-premissas tbody th {
+  white-space: normal;
+  min-width: 14ch;
+}
+
+/* ---- Alternância nominal / poder de compra ---- */
+
+.proj-troca {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--ia-regra);
+  border-radius: var(--raio-pill);
+  background: var(--ia-fundo-2);
+}
+.proj-troca button {
+  font-family: var(--fonte-num);
+  font-size: var(--t-2xs);
+  letter-spacing: 0.02em;
+  color: var(--ia-tinta-2);
+  padding: 0 var(--e-3);
+  min-height: 30px;
+  border-radius: var(--raio-pill);
+  transition: all var(--dur-1) var(--ease);
+  white-space: nowrap;
+}
+.proj-troca button:hover {
+  color: var(--ia-tinta);
+}
+.proj-troca button[aria-pressed="true"] {
+  background: var(--ia-acento);
+  color: var(--ia-fundo);
+  font-weight: 600;
+}
+
+.proj-cabeca {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  margin-bottom: var(--e-4);
+}
+.proj-cabeca .ia-rotulo {
+  margin-bottom: 0;
+}
+
+@media (max-width: 720px) {
+  .proj-cenarios {
+    grid-template-columns: 1fr;
+  }
+  .proj-leitura {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .proj-faixa-fim {
+    text-align: left;
+  }
+}
+
+/* ============================================================
+   O QUE É APURADO E O QUE É PROTÓTIPO, NA FAIXA
+
+   A faixa passou a misturar as duas coisas quando Selic, IPCA e
+   câmbio começaram a vir do Banco Central. A tarja do topo não
+   resolve mais sozinha: quem olha o IBOV não relê a tarja.
+
+   A marca difere em FORMA, não só em cor — régua tracejada e um til.
+   É a mesma regra dos seis estados do radar: um print em preto e
+   branco ainda separa os dois.
+   ============================================================ */
+
+.ticker-item[data-ficticio="sim"] dt {
+  border-bottom: 1px dashed var(--c-regra-media);
+  padding-bottom: 1px;
+}
+.ticker-fict {
+  margin-left: 3px;
+  color: var(--c-texto-3);
+  font-weight: 400;
+}
+.ticker-item[data-ficticio="sim"] dd {
+  color: var(--c-texto-2);
+}
+
+/* Texto só para leitor de tela. O marcador visual é o til; quem
+   navega por áudio precisa da frase inteira, não de um símbolo. */
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Valor interpolado na prosa ({{selic}}).
+   Tabular para não dançar quando o número muda de largura, e a mesma
+   régua tracejada da faixa quando ainda é protótipo — a marca do que
+   é fictício tem de ser a mesma em toda a página. */
+.valor-vivo {
+  font-family: var(--fonte-num);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95em;
+}
+.valor-vivo[data-apurado="nao"] {
+  border-bottom: 1px dashed var(--c-regra-media);
+}
+
+/* Idade da edição. Fica na mesma linha da data, mais leve — é
+   ressalva, não manchete. */
+.edicao-idade {
+  margin-left: var(--e-2);
+  color: var(--c-texto-3);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
 }

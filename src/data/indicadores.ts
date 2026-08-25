@@ -1,5 +1,6 @@
 import type { Fonte, Indicador } from "@/types";
 import { gerarSerie } from "@/lib/serie";
+import { aplicarReal } from "@/data/gerado/aplicar";
 
 /**
  * ⚠️  DADOS DE PROTÓTIPO
@@ -154,11 +155,26 @@ const base: Base[] = [
   },
 ];
 
-export const indicadores: Indicador[] = base.map((b) => ({
-  ...b,
-  natureza: "exemplo",
-  serie: gerarSerie(b.id, b.valor, b.variacaoPct),
-}));
+/**
+ * Protótipo primeiro, dado real por cima.
+ *
+ * Cada indicador nasce como `exemplo` com número inventado e série
+ * gerada. `aplicarReal` substitui valor, variação, série e fonte
+ * quando o robô diário trouxe aquele id do Banco Central — e só
+ * então a natureza vira `apurado`.
+ *
+ * Os que continuam `exemplo` continuam fictícios, e a tarja no
+ * rodapé continua verdadeira para eles. É por isso que a substituição
+ * é por id, e não um interruptor global: o site vive com metade real
+ * e metade protótipo sem afirmar nada falso sobre nenhuma das duas.
+ */
+export const indicadores: Indicador[] = base.map((b) =>
+  aplicarReal({
+    ...b,
+    natureza: "exemplo",
+    serie: gerarSerie(b.id, b.valor, b.variacaoPct),
+  }),
+);
 
 const porId = new Map(indicadores.map((i) => [i.id, i]));
 

@@ -1,22 +1,12 @@
 import Link from "next/link";
+export { formatar } from "@/lib/formato";
+
 import type { Direcao, EstadoRadar, Fonte, Natureza } from "@/types";
 import { caminho } from "@/lib/serie";
 import { ROTULO_ESTADO } from "@/data/radar";
 
 /* ============ Formatação numérica ============ */
 
-export function formatar(
-  valor: number,
-  casas: number,
-  prefixo?: string,
-  sufixo?: string,
-): string {
-  const n = valor.toLocaleString("pt-BR", {
-    minimumFractionDigits: casas,
-    maximumFractionDigits: casas,
-  });
-  return `${prefixo ?? ""}${n}${sufixo ?? ""}`;
-}
 
 /**
  * Variação com três sinais simultâneos: seta, cor e sinal aritmético.

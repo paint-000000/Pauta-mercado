@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { getTermo } from "@/data/glossario";
+import { useDialogo } from "@/lib/dialogo";
 
 /**
  * O glossário é global de propósito.
@@ -38,21 +32,12 @@ export default function GlossarioProvider({
   children: React.ReactNode;
 }) {
   const [slug, setSlug] = useState<string | null>(null);
-  const fecharRef = useRef<HTMLButtonElement>(null);
 
   const fechar = useCallback(() => setSlug(null), []);
 
-  // Esc fecha e o foco vai para o botão de fechar ao abrir. Sem isso,
-  // quem navega por teclado fica preso atrás do painel.
-  useEffect(() => {
-    if (!slug) return;
-    fecharRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") fechar();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [slug, fechar]);
+  // Esc, armadilha de foco, trava de rolagem e devolução do foco ao
+  // fechar. Ver `lib/dialogo.ts` — o mesmo comportamento da busca.
+  const painel = useDialogo(slug !== null, fechar);
 
   const termo = slug ? getTermo(slug) : undefined;
 
@@ -69,7 +54,9 @@ export default function GlossarioProvider({
             tabIndex={-1}
           />
           <div
+            ref={painel}
             className="folha"
+            tabIndex={-1}
             role="dialog"
             aria-modal="true"
             aria-labelledby="termo-titulo"
@@ -138,7 +125,6 @@ export default function GlossarioProvider({
               )}
 
               <button
-                ref={fecharRef}
                 type="button"
                 className="btn"
                 data-v="solido"

@@ -71,6 +71,11 @@
   --ia-fundo: #17211e;
   --ia-fundo-2: #1f2b27;
   --ia-fundo-3: #2a3833;
+  /* ⚠️  Estas tintas existem SOBRE A SUPERFÍCIE ESCURA e só lá.
+     Sobre papel, `--ia-tinta` dá 1,13:1 — branco no branco. Já
+     aconteceu, no menu principal: os dois links da camada de IA
+     ficaram invisíveis e ninguém notou por semanas. A regra que
+     valia para o acento vale para a tinta. */
   --ia-tinta: #eaefec; /* 13,9:1 sobre --ia-fundo */
   --ia-tinta-2: #a9bab2; /*  6,6:1 — AA        */
   --ia-regra: #35443e;

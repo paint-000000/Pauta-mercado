@@ -8,6 +8,16 @@ import { formatar, Variacao } from "@/components/ui/Dados";
  * Rola na horizontal em vez de animar sozinha: marquee automático
  * atrapalha leitura, impede clique e viola a recomendação de não
  * mover conteúdo sem controle do usuário (WCAG 2.2.2).
+ *
+ * Desde que parte dos indicadores passou a vir do Banco Central, a
+ * faixa mistura número apurado e número de protótipo na mesma linha.
+ * Enquanto tudo era fictício, a tarja do topo dava conta sozinha;
+ * agora ela não dá — quem olha o IBOV não relê a tarja.
+ *
+ * O que é inventado ganha marca própria: régua tracejada sob a sigla
+ * e um til antes do valor. Diferem em FORMA, não só em cor, que é a
+ * mesma regra dos seis estados do radar — um print em preto e branco
+ * ainda separa os dois.
  */
 export default function Faixa() {
   const lista = NA_FAIXA.map((id) =>
@@ -19,9 +29,26 @@ export default function Faixa() {
       <div className="env">
         <dl className="ticker-fita">
           {lista.map((i) => (
-            <Link key={i.id} href={`/mercados#${i.id}`} className="ticker-item">
-              <dt>{i.sigla}</dt>
-              <dd>{formatar(i.valor, i.casas, i.prefixo, i.sufixo)}</dd>
+            <Link
+              key={i.id}
+              href={`/mercados#${i.id}`}
+              className="ticker-item"
+              data-ficticio={i.natureza === "apurado" ? undefined : "sim"}
+            >
+              <dt>
+                {i.sigla}
+                {i.natureza !== "apurado" && (
+                  <span className="ticker-fict" aria-hidden="true">
+                    ~
+                  </span>
+                )}
+              </dt>
+              <dd>
+                {formatar(i.valor, i.casas, i.prefixo, i.sufixo)}
+                {i.natureza !== "apurado" && (
+                  <span className="so-leitor"> (valor fictício de protótipo)</span>
+                )}
+              </dd>
               <Variacao direcao={i.direcao} pct={i.variacaoPct} />
             </Link>
           ))}

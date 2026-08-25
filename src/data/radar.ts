@@ -153,10 +153,10 @@ export const edicao: Edicao = {
   chamada:
     "Juros parados por mais tempo do que se esperava. É a informação que organiza todo o resto de hoje.",
   sessenta: [
-    "O [[copom]] manteve a [[selic]] em 10,50% e tirou do comunicado a menção a cortes próximos.",
+    "O [[copom]] manteve a [[selic]] em {{selic}} e tirou do comunicado a menção a cortes próximos.",
     "O [[di|DI futuro]] curto subiu — o mercado empurrou a aposta de corte para mais adiante.",
     "A [[inflacao]] de serviços cedeu pelo segundo mês, mas segue acima da média histórica.",
-    "O [[ibovespa]] fechou em alta de 0,8%, puxado por siderurgia e bancos.",
+    "O [[ibovespa]] fechou em alta de {{ibovespa.var}}, puxado por siderurgia e bancos.",
     "Nos Estados Unidos, o Fed manteve os juros e o dólar se fortaleceu frente a emergentes.",
     "Títulos atrelados à inflação voltaram a pagar mais de 6% de juro real ao ano.",
     "Fundos imobiliários de tijolo continuam abaixo do valor patrimonial.",

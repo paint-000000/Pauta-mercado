@@ -51,7 +51,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # 22.6+ executa TypeScript direto (type stripping) — é o que
+          # permite rodar os testes e a validação de conteúdo sem
+          # nenhuma dependência de build extra.
+          node-version: "24"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -73,6 +76,21 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+      # Falhar aqui é barato; publicar conteúdo órfão não é. Cada passo
+      # roda mesmo se o anterior falhar, para o relatório sair inteiro
+      # numa rodada só.
+      - name: Checagem de tipos
+        run: npx tsc --noEmit
+      - name: Lint
+        run: npx eslint
+        if: '!cancelled()'
+      - name: Testes
+        run: npm test
+        if: '!cancelled()'
+      - name: Validação de conteúdo
+        run: npm run validar
+        if: '!cancelled()'
+
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact

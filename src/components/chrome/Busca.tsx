@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useDialogo } from "@/lib/dialogo";
 import { ativos, ROTULO_TIPO } from "@/data/ativos";
 import { indicadores } from "@/data/indicadores";
 import { noticias } from "@/data/noticias";
@@ -24,16 +25,11 @@ type Resultado = {
  */
 export default function Busca({ aoFechar }: { aoFechar: () => void }) {
   const [q, setQ] = useState("");
-  const campoRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    campoRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") aoFechar();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [aoFechar]);
+  // Esc, armadilha de foco, trava de rolagem e devolução do foco ao
+  // botão de busca no cabeçalho. Ver `lib/dialogo.ts`. O campo é o
+  // primeiro elemento focável do painel, então o cursor cai nele.
+  const painel = useDialogo(true, aoFechar);
 
   const indice = useMemo<Resultado[]>(
     () => [
@@ -85,13 +81,20 @@ export default function Busca({ aoFechar }: { aoFechar: () => void }) {
         aria-label="Fechar busca"
         tabIndex={-1}
       />
-      <div className="folha" role="dialog" aria-modal="true" aria-label="Buscar">
+      <div
+        ref={painel}
+        className="folha"
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Buscar"
+      >
         <label className="chapeu" htmlFor="busca" style={{ marginBottom: "var(--e-2)" }}>
           Buscar
         </label>
         <input
           id="busca"
-          ref={campoRef}
+          data-foco-inicial
           className="campo"
           type="search"
           value={q}

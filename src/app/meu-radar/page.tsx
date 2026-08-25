@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { Estado, RotuloSecao } from "@/components/ui/Dados";
 import Texto from "@/components/glossario/Texto";
 import { radar } from "@/data/radar";
 import { noticias } from "@/data/noticias";
 import { eventos, ipos } from "@/data/ipos";
+import {
+  alternarInteresse,
+  useHidratado,
+  useInteresses,
+} from "@/lib/preferencias";
 import type { Interesse } from "@/types";
 
 /**
@@ -16,12 +20,12 @@ import type { Interesse } from "@/types";
  * sai do navegador. É a única forma de personalizar sem pedir dado
  * pessoal, e o texto da página diz isso em vez de deixar implícito.
  *
- * Hidratação: o primeiro render (servidor e cliente) usa a lista
- * vazia, e o storage entra no efeito. Ler `localStorage` durante o
- * render produziria HTML diferente no servidor e um erro no console.
+ * A leitura e a gravação ficam em `lib/preferencias.ts`: é lá que o
+ * valor gravado é saneado antes de virar filtro. O que está no
+ * storage veio de outra aba, de uma versão anterior do site ou de
+ * alguém editando à mão — um tema inválido chegando aos mapas abaixo
+ * derrubava a página.
  */
-
-const CHAVE = "pauta:interesses:v1";
 
 const OPCOES: { valor: Interesse; rotulo: string; descricao: string }[] = [
   { valor: "renda-fixa", rotulo: "Renda fixa", descricao: "Tesouro, CDB, títulos" },
@@ -52,31 +56,8 @@ const CATEGORIA_POR_INTERESSE: Record<Interesse, string[]> = {
 };
 
 export default function MeuRadar() {
-  const [interesses, setInteresses] = useState<Interesse[]>([]);
-  const [carregado, setCarregado] = useState(false);
-
-  useEffect(() => {
-    try {
-      const bruto = localStorage.getItem(CHAVE);
-      if (bruto) setInteresses(JSON.parse(bruto) as Interesse[]);
-    } catch {
-      // Storage bloqueado (modo privado, política do navegador).
-      // Seguir sem persistência é melhor que quebrar a página.
-    }
-    setCarregado(true);
-  }, []);
-
-  function alternar(v: Interesse) {
-    setInteresses((atual) => {
-      const novo = atual.includes(v)
-        ? atual.filter((x) => x !== v)
-        : [...atual, v];
-      try {
-        localStorage.setItem(CHAVE, JSON.stringify(novo));
-      } catch {}
-      return novo;
-    });
-  }
+  const interesses = useInteresses();
+  const carregado = useHidratado();
 
   const semSelecao = interesses.length === 0;
 
@@ -113,7 +94,7 @@ export default function MeuRadar() {
               type="button"
               className="chip"
               aria-pressed={interesses.includes(o.valor)}
-              onClick={() => alternar(o.valor)}
+              onClick={() => alternarInteresse(o.valor)}
             >
               {o.rotulo}
             </button>
