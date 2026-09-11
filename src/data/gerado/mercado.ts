@@ -7,7 +7,7 @@
 import type { Manifesto } from "@/lib/fontes/tipos";
 
 export const MERCADO: Manifesto = {
-  "rodadoEm": "2026-09-10T23:20:55.016Z",
+  "rodadoEm": "2026-09-11T23:29:23.289Z",
   "fontes": [
     {
       "nome": "Banco Central",
@@ -25,11 +25,11 @@ export const MERCADO: Manifesto = {
       "valor": 14,
       "variacao": 0,
       "variacaoPct": 0,
-      "apuradoEm": "2026-09-10T12:00:00-03:00",
+      "apuradoEm": "2026-09-11T12:00:00-03:00",
       "fonte": {
         "nome": "Banco Central",
         "url": "https://www.bcb.gov.br",
-        "publicadoEm": "2026-09-10T12:00:00-03:00"
+        "publicadoEm": "2026-09-11T12:00:00-03:00"
       },
       "serie": [
         14,
@@ -67,14 +67,14 @@ export const MERCADO: Manifesto = {
     },
     "ipca": {
       "id": "ipca",
-      "valor": 4.44,
-      "variacao": -0.1999999999999993,
-      "variacaoPct": -4.310344827586192,
-      "apuradoEm": "2026-07-01T12:00:00-03:00",
+      "valor": 4.22,
+      "variacao": -0.22000000000000064,
+      "variacaoPct": -4.954954954954969,
+      "apuradoEm": "2026-08-01T12:00:00-03:00",
       "fonte": {
         "nome": "Banco Central",
         "url": "https://www.bcb.gov.br",
-        "publicadoEm": "2026-07-01T12:00:00-03:00"
+        "publicadoEm": "2026-08-01T12:00:00-03:00"
       },
       "serie": [
         4.5,
@@ -101,23 +101,23 @@ export const MERCADO: Manifesto = {
         4.39,
         4.72,
         4.64,
-        4.44
+        4.44,
+        4.22
       ],
-      "estado": "mantido"
+      "estado": "novo"
     },
     "dolar": {
       "id": "dolar",
-      "valor": 5.1149,
-      "variacao": 0.01699999999999946,
-      "variacaoPct": 0.33347064477528904,
-      "apuradoEm": "2026-09-10T12:00:00-03:00",
+      "valor": 5.0918,
+      "variacao": -0.023099999999999454,
+      "variacaoPct": -0.4516217325851816,
+      "apuradoEm": "2026-09-11T12:00:00-03:00",
       "fonte": {
         "nome": "Banco Central",
         "url": "https://www.bcb.gov.br",
-        "publicadoEm": "2026-09-10T12:00:00-03:00"
+        "publicadoEm": "2026-09-11T12:00:00-03:00"
       },
       "serie": [
-        5.0739,
         5.0773,
         5.0723,
         5.1053,
@@ -146,7 +146,8 @@ export const MERCADO: Manifesto = {
         5.1253,
         5.0856,
         5.0979,
-        5.1149
+        5.1149,
+        5.0918
       ],
       "estado": "novo"
     }
