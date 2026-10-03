@@ -7,11 +7,12 @@
 import type { Manifesto } from "@/lib/fontes/tipos";
 
 export const MERCADO: Manifesto = {
-  "rodadoEm": "2026-10-02T01:01:47.985Z",
+  "rodadoEm": "2026-10-03T00:37:50.696Z",
   "fontes": [
     {
       "nome": "Banco Central",
-      "ok": true
+      "ok": false,
+      "erro": "fetch failed"
     },
     {
       "nome": "B3 (brapi)",
@@ -63,7 +64,7 @@ export const MERCADO: Manifesto = {
         13.75,
         13.75
       ],
-      "estado": "mantido"
+      "estado": "velho"
     },
     "ipca": {
       "id": "ipca",
@@ -104,7 +105,7 @@ export const MERCADO: Manifesto = {
         4.44,
         4.22
       ],
-      "estado": "mantido"
+      "estado": "velho"
     },
     "dolar": {
       "id": "dolar",
@@ -149,7 +150,7 @@ export const MERCADO: Manifesto = {
         5.1809,
         5.2079
       ],
-      "estado": "novo"
+      "estado": "velho"
     }
   }
 };
