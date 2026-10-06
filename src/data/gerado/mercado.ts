@@ -7,12 +7,11 @@
 import type { Manifesto } from "@/lib/fontes/tipos";
 
 export const MERCADO: Manifesto = {
-  "rodadoEm": "2026-10-03T00:37:50.696Z",
+  "rodadoEm": "2026-10-06T01:50:16.074Z",
   "fontes": [
     {
       "nome": "Banco Central",
-      "ok": false,
-      "erro": "fetch failed"
+      "ok": true
     },
     {
       "nome": "B3 (brapi)",
@@ -26,11 +25,11 @@ export const MERCADO: Manifesto = {
       "valor": 13.75,
       "variacao": 0,
       "variacaoPct": 0,
-      "apuradoEm": "2026-10-01T12:00:00-03:00",
+      "apuradoEm": "2026-10-05T12:00:00-03:00",
       "fonte": {
         "nome": "Banco Central",
         "url": "https://www.bcb.gov.br",
-        "publicadoEm": "2026-10-01T12:00:00-03:00"
+        "publicadoEm": "2026-10-05T12:00:00-03:00"
       },
       "serie": [
         14,
@@ -44,10 +43,10 @@ export const MERCADO: Manifesto = {
         14,
         14,
         14,
-        14,
-        14,
-        14,
-        14,
+        13.75,
+        13.75,
+        13.75,
+        13.75,
         13.75,
         13.75,
         13.75,
@@ -64,7 +63,7 @@ export const MERCADO: Manifesto = {
         13.75,
         13.75
       ],
-      "estado": "velho"
+      "estado": "mantido"
     },
     "ipca": {
       "id": "ipca",
@@ -105,22 +104,20 @@ export const MERCADO: Manifesto = {
         4.44,
         4.22
       ],
-      "estado": "velho"
+      "estado": "mantido"
     },
     "dolar": {
       "id": "dolar",
-      "valor": 5.2079,
-      "variacao": 0.027000000000000135,
-      "variacaoPct": 0.5211449748113288,
-      "apuradoEm": "2026-10-01T12:00:00-03:00",
+      "valor": 4.9859,
+      "variacao": -0.23789999999999978,
+      "variacaoPct": -4.55415597840652,
+      "apuradoEm": "2026-10-05T12:00:00-03:00",
       "fonte": {
         "nome": "Banco Central",
         "url": "https://www.bcb.gov.br",
-        "publicadoEm": "2026-10-01T12:00:00-03:00"
+        "publicadoEm": "2026-10-05T12:00:00-03:00"
       },
       "serie": [
-        5.1862,
-        5.1625,
         5.1512,
         5.149,
         5.1604,
@@ -148,9 +145,11 @@ export const MERCADO: Manifesto = {
         5.2132,
         5.2204,
         5.1809,
-        5.2079
+        5.2079,
+        5.2238,
+        4.9859
       ],
-      "estado": "velho"
+      "estado": "novo"
     }
   }
 };
