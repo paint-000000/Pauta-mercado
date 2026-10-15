@@ -7,12 +7,11 @@
 import type { Manifesto } from "@/lib/fontes/tipos";
 
 export const MERCADO: Manifesto = {
-  "rodadoEm": "2026-10-15T00:02:06.417Z",
+  "rodadoEm": "2026-10-15T23:45:34.976Z",
   "fontes": [
     {
       "nome": "Banco Central",
-      "ok": false,
-      "erro": "HTTP 502"
+      "ok": true
     },
     {
       "nome": "B3 (brapi)",
@@ -26,16 +25,16 @@ export const MERCADO: Manifesto = {
       "valor": 13.75,
       "variacao": 0,
       "variacaoPct": 0,
-      "apuradoEm": "2026-10-13T12:00:00-03:00",
+      "apuradoEm": "2026-10-15T12:00:00-03:00",
       "fonte": {
         "nome": "Banco Central",
         "url": "https://www.bcb.gov.br",
-        "publicadoEm": "2026-10-13T12:00:00-03:00"
+        "publicadoEm": "2026-10-15T12:00:00-03:00"
       },
       "serie": [
         14,
-        14,
-        14,
+        13.75,
+        13.75,
         13.75,
         13.75,
         13.75,
@@ -64,7 +63,7 @@ export const MERCADO: Manifesto = {
         13.75,
         13.75
       ],
-      "estado": "velho"
+      "estado": "mantido"
     },
     "ipca": {
       "id": "ipca",
@@ -105,22 +104,20 @@ export const MERCADO: Manifesto = {
         4.22,
         4.58
       ],
-      "estado": "velho"
+      "estado": "mantido"
     },
     "dolar": {
       "id": "dolar",
-      "valor": 5.0096,
-      "variacao": 0.02039999999999953,
-      "variacaoPct": 0.408883187685391,
-      "apuradoEm": "2026-10-13T12:00:00-03:00",
+      "valor": 5.0521,
+      "variacao": 0.008000000000000007,
+      "variacaoPct": 0.15860113796316502,
+      "apuradoEm": "2026-10-15T12:00:00-03:00",
       "fonte": {
         "nome": "Banco Central",
         "url": "https://www.bcb.gov.br",
-        "publicadoEm": "2026-10-13T12:00:00-03:00"
+        "publicadoEm": "2026-10-15T12:00:00-03:00"
       },
       "serie": [
-        5.1816,
-        5.157,
         5.1273,
         5.0962,
         5.1253,
@@ -148,9 +145,11 @@ export const MERCADO: Manifesto = {
         4.9935,
         5.0119,
         4.9892,
-        5.0096
+        5.0096,
+        5.0441,
+        5.0521
       ],
-      "estado": "velho"
+      "estado": "novo"
     }
   }
 };
