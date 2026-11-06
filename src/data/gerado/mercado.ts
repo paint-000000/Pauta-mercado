@@ -7,7 +7,7 @@
 import type { Manifesto } from "@/lib/fontes/tipos";
 
 export const MERCADO: Manifesto = {
-  "rodadoEm": "2026-11-05T01:41:14.671Z",
+  "rodadoEm": "2026-11-06T01:43:23.449Z",
   "fontes": [
     {
       "nome": "Banco Central",
@@ -25,11 +25,11 @@ export const MERCADO: Manifesto = {
       "valor": 13.75,
       "variacao": 0,
       "variacaoPct": 0,
-      "apuradoEm": "2026-11-04T12:00:00-03:00",
+      "apuradoEm": "2026-11-05T12:00:00-03:00",
       "fonte": {
         "nome": "Banco Central",
         "url": "https://www.bcb.gov.br",
-        "publicadoEm": "2026-11-04T12:00:00-03:00"
+        "publicadoEm": "2026-11-05T12:00:00-03:00"
       },
       "serie": [
         13.75,
@@ -108,17 +108,16 @@ export const MERCADO: Manifesto = {
     },
     "dolar": {
       "id": "dolar",
-      "valor": 5.4778,
+      "valor": 5.4621,
       "variacao": -0.015699999999999825,
-      "variacaoPct": -0.2857922999908951,
-      "apuradoEm": "2026-11-04T12:00:00-03:00",
+      "variacaoPct": -0.2866114133411191,
+      "apuradoEm": "2026-11-05T12:00:00-03:00",
       "fonte": {
         "nome": "Banco Central",
         "url": "https://www.bcb.gov.br",
-        "publicadoEm": "2026-11-04T12:00:00-03:00"
+        "publicadoEm": "2026-11-05T12:00:00-03:00"
       },
       "serie": [
-        5.1161,
         5.1414,
         5.1795,
         5.1991,
@@ -147,7 +146,8 @@ export const MERCADO: Manifesto = {
         5.3744,
         5.4212,
         5.4935,
-        5.4778
+        5.4778,
+        5.4621
       ],
       "estado": "novo"
     }
